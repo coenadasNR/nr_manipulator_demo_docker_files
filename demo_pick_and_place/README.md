@@ -7,7 +7,7 @@ This is the Official Repository for the NR Manipulator Setup hosting Demo 1 whic
 
 ### Start Containers
 
-In a terminals, run the container and start the nodes within.
+In a terminal, run the container and start the nodes within.
 
 #### Terminal 1
 
