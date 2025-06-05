@@ -4,11 +4,13 @@ import os
 from subprocess import Popen, PIPE
 
 
-cwd = os.getcwd()
+# cwd = os.getcwd()
+
+cwd = "/home/nr-ws-1/Desktop/nr_manipulator_demo_docker_files/demo_pick_and_place"
 
 # Specify the container name or ID
 CONTAINER_NAME = "demo_pick_and_place"
-
+# CONTAINER_NAME = "demo2"
 
 def pick_place_sim():
     os.environ['RUN_MODE'] = "sim"
@@ -16,6 +18,9 @@ def pick_place_sim():
 def pick_place_sim_real():
     os.environ['RUN_MODE'] = "hardware"
     subprocess.call(f"{cwd}/run.sh", shell=True)
+# def demo2_pick_place_sim_real():
+#     os.environ['RUN_MODE'] = "hardware"
+#     subprocess.call(f"{cwd}/run.sh", shell=True)
 
 def write_to_file(data):
     with open('database.txt',mode='a') as database:
@@ -61,7 +66,7 @@ def submit_form():
     
 @app.route('/stop_container', methods=['POST'])
 def stop_demo():
-    subprocess.call(f"sudo docker kill {CONTAINER_NAME}", shell=True)
+    subprocess.call(f"docker kill {CONTAINER_NAME}", shell=True)
     return redirect('/thankyou.html')
     
     

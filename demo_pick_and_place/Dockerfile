@@ -1,16 +1,24 @@
 # Use the official ROS Humble desktop image as the base image
 FROM osrf/ros:humble-desktop-full
 
-ENTRYPOINT [ "/src/entrypoint.sh"]
-
 ENV ROS_DISTRO=humble
 
-COPY /src /root/ros2_ws/src/
+COPY /src2 /root/ros2_ws/src/
 
 # Set the working directory inside the container
-WORKDIR /root/ros2_ws/src/nr_manipulator_software_files/src/xarm_ros2_NR/
+WORKDIR /root/ros2_ws/src/
 
 # Update apt-get and install dependencies for rosdep
+RUN apt-get update && apt-get install -y \
+    python3-colcon-common-extensions \
+    ros-humble-librealsense2* \
+    ros-humble-realsense2-* \
+    python3-rosdep \
+    python3-pip 
+
+
+# Install opencv-contrib-python using pip3
+RUN pip3 install opencv-contrib-python
 
 RUN apt-get update && \
     apt install apparmor -y && \
@@ -28,4 +36,4 @@ RUN cd /root/ros2_ws \
     && . /opt/ros/humble/setup.sh \
     && colcon build
 
-
+ENTRYPOINT [ "/root/ros2_ws/src/entrypoint.sh"]
