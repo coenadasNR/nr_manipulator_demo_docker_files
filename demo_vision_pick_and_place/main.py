@@ -28,13 +28,13 @@ def send_email(data):
         data = request.form.to_dict()
         email = EmailMessage()
         email['from'] = 'NR Manipulators'
-        email['to'] = '****@gmail.com' #TODO 
+        email['to'] = '****@gmail.com' #TODO : Enter Email ID of person who wants to receive these
         email['subject'] = 'Feedback Received'
         email.set_content(f"Name : {data['name']}\nEmail : {data['email']}\nMessage : {data['message']}")
         with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp: # DO NOT CHANGE PORT NUMBER
             smtp.ehlo()
             smtp.starttls()
-            smtp.login('****@gmail.com','****')
+            smtp.login('****@gmail.com','****') #TODO : ENter email id and password of an account that will send these messages
             smtp.send_message(email)
         return "Email Sent!"
             
