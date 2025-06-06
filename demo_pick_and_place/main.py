@@ -2,11 +2,12 @@ from flask import Flask, render_template, request, redirect, jsonify
 import subprocess
 import os
 from subprocess import Popen, PIPE
+import smtplib
+from email.message import EmailMessage
 
+cwd = os.getcwd()
 
-# cwd = os.getcwd()
-
-cwd = "/home/nr-ws-1/Desktop/nr_manipulator_demo_docker_files/demo_pick_and_place"
+# cwd = "/home/nr-ws-1/Desktop/nr_manipulator_demo_docker_files/demo_pick_and_place"
 
 # Specify the container name or ID
 CONTAINER_NAME = "demo_pick_and_place"
@@ -21,6 +22,22 @@ def pick_place_sim_real():
 # def demo2_pick_place_sim_real():
 #     os.environ['RUN_MODE'] = "hardware"
 #     subprocess.call(f"{cwd}/run.sh", shell=True)
+
+def send_email(data):
+    if request.method == 'POST':
+        data = request.form.to_dict()
+        email = EmailMessage()
+        email['from'] = 'NR Manipulators'
+        email['to'] = 'coenadas@gmail.com'
+        email['subject'] = 'Feedback Received'
+        email.set_content(f"Name : {data['name']}\nEmail : {data['email']}\nMessage : {data['message']}")
+        with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.login('coenadas.nr@gmail.com','gezz falb jfwy wckk')
+            smtp.send_message(email)
+        return "Email Sent!"
+            
 
 def write_to_file(data):
     with open('database.txt',mode='a') as database:
@@ -60,6 +77,7 @@ def submit_form():
     if request.method == 'POST':
         data = request.form.to_dict()
         write_to_file(data)
+        send_email(data)
         return redirect('/thankyou.html')
     else:
         return 'something went wrong. Try again!'
@@ -68,7 +86,8 @@ def submit_form():
 def stop_demo():
     subprocess.call(f"docker kill {CONTAINER_NAME}", shell=True)
     return redirect('/thankyou.html')
-    
+
+
     
 
 if __name__=="__main__":
